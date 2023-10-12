@@ -1,9 +1,11 @@
 
+import sys
 import cv2 
 import numpy as np
 from recognizer import detect
 from node_detector import node_detector
 from mapping import mapping, mid_point
+from PIL import Image 
 
 def main(img):
     """main function where all algorithms are called
@@ -89,6 +91,7 @@ def main(img):
 
     # writes all the components present and draws them on a plain image
     f.write("Components in the circuit are: \n")
+    print("Components in the circuit are: \n")
     count_ind = [0]*len(classes)
     comp_list = []
     for i in range(dim_matrix.shape[0]):
@@ -100,14 +103,17 @@ def main(img):
         midx,midy = mid_point(dim[1],dim[0],dim[3],dim[2])
         cv2.putText(result,classes[cl]+str(count_ind[cl]+1), (int(midy),int(midx)),cv2.FONT_HERSHEY_PLAIN,1, (255, 0, 0), 1, cv2.LINE_AA)
         f.write(names[cl]+" "+classes[cl]+str(count_ind[cl]+1)+"\n")
+        print(names[cl]+" "+classes[cl]+str(count_ind[cl]+1)+"\n")
         comp_list.append(names[cl]+" "+classes[cl]+str(count_ind[cl]+1))
         count_ind[cl] = count_ind[cl] + 1
     
     # writes all the nodes/junctions present and draws them on a plain image
     f.write("Junctions in the circuit are: \n")
+    print("Junctions in the circuit are: \n")
     jns_list = []
     for i in range(nodes.shape[0]):
         f.write("Node N"+str(i+1)+"\n")
+        print("Node N"+str(i+1)+"\n")
         jns_list.append("Junction N"+str(i+1))
         x,y= nodes[i]
         cv2.circle(result,(int(y),int(x)), 1, (0,0,255), 6)
@@ -115,6 +121,7 @@ def main(img):
     
     # writes all the connections present and draws them on a plain image
     f.write("Connections in the circuit are: \n")
+    print("Connections in the circuit are: \n")
     conn_list = []
     count_ind = [0]*len(classes)
     for i,_ in enumerate(maps):
@@ -128,6 +135,7 @@ def main(img):
         cv2.line(result,start1,end1,(0,0,0),2)
         cv2.line(result,start2,end2,(0,0,0),2)
         f.write(classes[cl]+str(count_ind[cl]+1)+" is between Node"+str(n1)+" and Node"+str(n2)+"\n")
+        print(classes[cl]+str(count_ind[cl]+1)+" is between Node"+str(n1)+" and Node"+str(n2)+"\n")
         conn_list.append(classes[cl]+str(count_ind[cl]+1)+" is between Node"+str(n1)+" and Node"+str(n2))
         count_ind[cl] = count_ind[cl] + 1
     
@@ -148,9 +156,19 @@ def main(img):
         n2 = node_node_map[i][1]             
         if count_node_ind[i] < 2:
             f.write("Node"+str(n1)+" and "+"Node"+str(n2)+" are connected"+"\n")
+            print("Node"+str(n1)+" and "+"Node"+str(n2)+" are connected"+"\n")
             conn_list.append("Node"+str(n1)+" and "+"Node"+str(n2)+" are connected")
             start = (int(round(nodes[n1][1])),int(round(nodes[n1][0])))
             end = (int(round(nodes[n2][1])),int(round(nodes[n2][0])))
             cv2.line(result,start,end,(0,0,0),2)
     f.close()
     return result, boxes1, main_img1, comp_list, jns_list, conn_list
+
+image_file=sys.argv[1:]
+img = Image.open(image_file[0])
+inp = np.array(img)
+if __name__ == '__main__':
+    result, boxes1, main_img1, comp_list, jns_list, conn_list = main(inp)
+    cv2.imshow('img', result)
+    cv2.imshow('img2', main_img1)
+    cv2.waitKey(50000)

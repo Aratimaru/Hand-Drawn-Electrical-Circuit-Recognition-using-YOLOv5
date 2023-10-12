@@ -1,6 +1,7 @@
 """
 Web app on streamlit
 """
+import sklearn
 from PIL import Image 
 import os
 
