@@ -41,7 +41,7 @@ def main(img):
         start = (int(dim[0]),int(dim[1]))
         end = (int(dim[2]),int(dim[3]))
         boxes = cv2.rectangle(boxes, start, end, (255,0,0), 1) 
-        boxes1 = cv2.rectangle(main_img0, start, end, (255,0,0), 2) 
+        boxes1 = cv2.rectangle(main_img0, start, end, (255,255,100), -1) 
         comp_removed[int(round(dim[1])):int(round(dim[3])),int(round(dim[0])):int(round(dim[2]))] = 255
     
     # detecting nodes on the components removed image
@@ -101,6 +101,7 @@ def main(img):
         end = (int(dim[2]),int(dim[3]))
         cv2.rectangle(result, start, end, (255,0,0), 2)
         midx,midy = mid_point(dim[1],dim[0],dim[3],dim[2])
+        cv2.putText(boxes1,classes[cl]+str(count_ind[cl]+1), (int(midy),int(midx)),cv2.FONT_HERSHEY_PLAIN,1, (255, 0, 0), 1, cv2.LINE_AA)
         cv2.putText(result,classes[cl]+str(count_ind[cl]+1), (int(midy),int(midx)),cv2.FONT_HERSHEY_PLAIN,1, (255, 0, 0), 1, cv2.LINE_AA)
         f.write(names[cl]+" "+classes[cl]+str(count_ind[cl]+1)+"\n")
         print(names[cl]+" "+classes[cl]+str(count_ind[cl]+1)+"\n")
@@ -169,6 +170,7 @@ img = Image.open(image_file[0])
 inp = np.array(img)
 if __name__ == '__main__':
     result, boxes1, main_img1, comp_list, jns_list, conn_list = main(inp)
-    cv2.imshow('img', result)
-    cv2.imshow('img2', main_img1)
-    cv2.waitKey(50000)
+    # cv2.imshow('img', main_img1)
+    cv2.imwrite('lastRecognizedImage.png', boxes1)
+    # cv2.imshow('img2', boxes1)
+    # cv2.waitKey(0)
