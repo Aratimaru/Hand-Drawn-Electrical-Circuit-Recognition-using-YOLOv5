@@ -104,7 +104,7 @@ def main(img):
         cv2.putText(boxes1,classes[cl]+str(count_ind[cl]+1), (int(midy),int(midx)),cv2.FONT_HERSHEY_PLAIN,1, (255, 0, 0), 1, cv2.LINE_AA)
         cv2.putText(result,classes[cl]+str(count_ind[cl]+1), (int(midy),int(midx)),cv2.FONT_HERSHEY_PLAIN,1, (255, 0, 0), 1, cv2.LINE_AA)
         f.write(names[cl]+" "+classes[cl]+str(count_ind[cl]+1)+"\n")
-        print(names[cl]+" "+classes[cl]+str(count_ind[cl]+1)+"\n")
+        print(classes[cl]+str(count_ind[cl]+1)+"\n")
         comp_list.append(names[cl]+" "+classes[cl]+str(count_ind[cl]+1))
         count_ind[cl] = count_ind[cl] + 1
     
@@ -114,7 +114,7 @@ def main(img):
     jns_list = []
     for i in range(nodes.shape[0]):
         f.write("Node N"+str(i+1)+"\n")
-        print("Node N"+str(i+1)+"\n")
+        print("N"+str(i+1)+"\n")
         jns_list.append("Junction N"+str(i+1))
         x,y= nodes[i]
         cv2.circle(result,(int(y),int(x)), 1, (0,0,255), 6)
@@ -170,7 +170,7 @@ img = Image.open(image_file[0])
 inp = np.array(img)
 if __name__ == '__main__':
     result, boxes1, main_img1, comp_list, jns_list, conn_list = main(inp)
-    # cv2.imshow('img', main_img1)
+    cv2.imshow('img', main_img1)
     cv2.imwrite('lastRecognizedImage.png', boxes1)
-    # cv2.imshow('img2', boxes1)
-    # cv2.waitKey(0)
+    cv2.imshow('img2', boxes1)
+    cv2.waitKey(0)
